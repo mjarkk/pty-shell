@@ -7,6 +7,7 @@ struct Shell {
 }
 impl PtyHandler for Shell {
     fn input(&mut self, input: &[u8]) {
+        // Print all saved input with Ctrl+D
         if input.len() == 1 && input[0] == 4 {
             println!("{}", String::from_utf8(self.input.clone()).unwrap());
         }
