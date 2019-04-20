@@ -4,17 +4,15 @@ use nix::sys::signal;
 use std::io::Read;
 use std::os::unix::io::AsRawFd;
 use super::PtyHandler;
-
-use ::tty;
-use winsize;
+use crate::{winsize, tty};
 
 pub const INPUT: Token = Token(0);
 pub const OUTPUT: Token = Token(1);
 
-static mut sigwinch_count: i32 = 0;
+static mut SIGWINCH_COUNT: i32 = 0;
 extern "C" fn handle_sigwinch(_: i32) {
     unsafe {
-        sigwinch_count += 1;
+        SIGWINCH_COUNT += 1;
     }
 }
 
@@ -57,7 +55,7 @@ impl RawHandler {
     }
 
     pub fn sigwinch_count() -> i32 {
-        unsafe { sigwinch_count }
+        unsafe { SIGWINCH_COUNT }
     }
 
     fn should_resize(&self) -> bool {
